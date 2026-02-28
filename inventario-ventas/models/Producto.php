@@ -47,4 +47,34 @@ class Producto {
         $stmt->bindParam(":id", $id);
         return $stmt->execute();
     }
+
+    public function actualizar($id, $nombre, $precio, $stock) {
+
+        if(empty($nombre)) {
+            throw new Exception("El nombre no puede estar vacío");
+        }
+
+        if($precio <= 0) {
+            throw new Exception("El precio debe ser mayor a 0");
+        }
+
+        if($stock < 0) {
+            throw new Exception("El stock no puede ser negativo");
+        }
+
+        $query = "UPDATE " . $this->table . " 
+                  SET nombre = :nombre, 
+                      precio = :precio, 
+                      stock = :stock
+                  WHERE id = :id";
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(":nombre", $nombre);
+        $stmt->bindParam(":precio", $precio);
+        $stmt->bindParam(":stock", $stock);
+        $stmt->bindParam(":id", $id);
+
+        return $stmt->execute();
+    }
 }
